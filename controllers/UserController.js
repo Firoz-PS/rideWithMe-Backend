@@ -11,16 +11,15 @@ const returnUser = (user) => {
     profileUrl: user.profileUrl,
     role: user.role,
   };
-}
-
+};
 
 // function to create a new user
 const createUser = async (req, res) => {
   const user = new User({
-    _id: req.body.userId,
+    _id: req.userId,
     fullName: req.body.fullName,
     emailId: req.body.emailId,
-    mobileNo: req.body.mobileNo,
+    mobileNo: req.mobileNo,
     profileUrl: "",
     role: UserRoleTypes.PASSENGER,
   });
@@ -56,11 +55,15 @@ const fetchUserProfile = (req, res) => {
 
 // function to update the profile details of a user
 const updateUserProfile = (req, res) => {
-  User.findByIdAndUpdate(req.body.userId, {
-    fullName: req.body.fullName,
-    emailId: req.body.emailId,
-    profileUrl: req.body.profileUrl,
-  })
+  User.findByIdAndUpdate(
+    req.userId,
+    {
+      fullName: req.body.fullName,
+      emailId: req.body.emailId,
+      profileUrl: req.body.profileUrl,
+    },
+    { new: true }
+  )
     .then((user) => {
       res.status(200).send({
         message: "user updated successfully",
@@ -70,24 +73,27 @@ const updateUserProfile = (req, res) => {
     .catch((err) => {
       res.status(404).send({ message: "User Not found." });
       console.log(err);
-    }).catch((err) => {
+    })
+    .catch((err) => {
       res.status(500).send({ message: "failed to update user" });
       console.log(err);
-    }
-  );
-}
+    });
+};
 
 // function to update the role of a user
 const updateUserRole = (req, res) => {
-
   if (req.body.role !== UserRoleTypes.RIDER && req.body.role !== UserRoleTypes.PASSENGER) {
     res.status(400).send({ message: "Invalid role" });
     return;
   }
 
-  User.findByIdAndUpdate(req.body.userId, {
-    role: req.body.role,
-  })
+  User.findByIdAndUpdate(
+    req.userId,
+    {
+      role: req.body.role,
+    },
+    { new: true }
+  )
     .then((user) => {
       res.status(200).send({
         message: "user role uptated successfully",
@@ -96,13 +102,12 @@ const updateUserRole = (req, res) => {
     .catch((err) => {
       res.status(404).send({ message: "User Not found." });
       console.log(err);
-    }).catch((err) => {
+    })
+    .catch((err) => {
       res.status(500).send({ message: "failed to update user role" });
       console.log(err);
-    }
-  );
-}
-
+    });
+};
 
 module.exports = {
   createUser,
