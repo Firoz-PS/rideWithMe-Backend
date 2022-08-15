@@ -2,9 +2,7 @@ const User = require("../models/UserModel");
 
 // function to check whether the given user already exists in the database
 const checkDuplicateUser = (req, res, next) => {
-    User.findOne({
-        userId: req.body.userId
-    })
+    User.findById(req.body.userId)
     .exec((err, user) => {
         if (err) {
             res.status(500).send({ message: err });

@@ -9,9 +9,9 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.post("/", [validator.checkDuplicateUser], UserController.createUser);
+router.post("/", [validator.checkDuplicateUser],UserController.createUser);
 router.get("/:id", [firebaseAuth.verifyToken], UserController.fetchUserProfile);
-//router.put("/update", [authJwt.verifyToken], UserController.updateUser);
-//router.put("/change-role", [authJwt.verifyToken], UserController.updateUserRole);
+router.put("/update", [firebaseAuth.verifyToken], UserController.updateUserProfile);
+router.put("/change-role", [firebaseAuth.verifyToken], UserController.updateUserRole);
 
 module.exports = router;
