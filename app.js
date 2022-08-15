@@ -19,7 +19,8 @@ const server = http.createServer(app);
 mongoose.connect(
 	`mongodb+srv://${dbConfig.USER}:${dbConfig.PASS}@cluster0.g6xp9.mongodb.net/${dbConfig.DB}?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
   .then(() => {
     console.log("Successfully connect to MongoDB.");

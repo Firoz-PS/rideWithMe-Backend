@@ -1,23 +1,25 @@
-const { auth } = require("../firebaseAdmin");
+const { admin } = require("../firebaseAdmin");
+
+const getAuthToken = (req, res, next) => {
+  if (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
+    req.authToken = req.headers.authorization.split(" ")[1];
+  } else {
+    req.authToken = null;
+  }
+  next();
+};
 
 exports.verifyToken = (req, res, next) => {
-  let idToken;
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
-    idToken = req.headers.authorization.split("Bearer ")[1];
-  } else {
-    console.error("No token found");
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-    auth
-    .verifyIdToken(idToken)
-    .then((decodedToken) => {
-      req.token = decodedToken;
-      req.userId = req.user.uid;
+  getAuthToken(req, res, async () => {
+    try {
+      const { authToken } = req;
+      const userInfo = await admin.auth().verifyIdToken(authToken);
+      req.userId = userInfo.uid;
+      req.mobileNo = userInfo.phone_number;
       return next();
-    })
-    .catch((err) => {
-      console.error("Error while verifying token ", err);
-      return res.status(401).json(err);
-    });
+    } catch (error) {
+      console.log("Error while verifying token ", error);
+      return res.status(401).send({ error: "You are not authorized to make this request" });
+    }
+  });
 };
