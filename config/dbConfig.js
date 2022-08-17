@@ -1,5 +1,5 @@
 module.exports = {
-    USER: "Firoz1",
-    PASS: "Pass123",
+    USER: "Mu",
+    PASS: "JHwH6W2fZGXopwiH",
     DB: "RideWithMe"
   };
