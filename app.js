@@ -5,7 +5,7 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const dbConfig = require("./config/dbConfig");
 
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
