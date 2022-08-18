@@ -17,13 +17,13 @@ const server = http.createServer(app);
 
 // connecting to mongoDB Atlas
 mongoose.connect(
-	`mongodb+srv://${dbConfig.USER}:${dbConfig.PASS}@cluster0.g6xp9.mongodb.net/${dbConfig.DB}?retryWrites=true&w=majority`, {
+	`mongodb+srv://${dbConfig.USER}:${dbConfig.PASS}@ride-with-mu-cluster.vdzhhh3.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
   })
   .then(() => {
-    console.log("Successfully connect to MongoDB.");
+    console.log("Successfully connected to MongoDB.");
   })
   .catch(err => {
     console.error("Connection error", err);
