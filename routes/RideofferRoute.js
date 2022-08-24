@@ -9,6 +9,8 @@ router.use(function (req, res, next) {
   next();
 });
 
+router.get("/", RideOfferController.getRideOffers)
 router.post("/", RideOfferController.createRideOffer);
+router.put("/:rideOfferId", RideOfferController.putRideOffer);
 
 module.exports = router;
