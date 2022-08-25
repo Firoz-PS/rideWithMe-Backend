@@ -5,7 +5,7 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const dbConfig = require("./config/dbConfig");
 
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
@@ -19,7 +19,8 @@ const server = http.createServer(app);
 mongoose.connect(
 	`mongodb+srv://${dbConfig.USER}:${dbConfig.PASS}@ride-with-mu-cluster.vdzhhh3.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   })
   .then(() => {
     console.log("Successfully connected to MongoDB.");
