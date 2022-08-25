@@ -1,22 +1,21 @@
 const mongoose = require("mongoose");
 const { Point } = require("./types");
 
-
-const RideOffer = mongoose.model(
-  "RideOffer",
+const RideRequest = mongoose.model(
+  "RideRequest",
   new mongoose.Schema({
     boardingPoint: {
       type: Point,
       required: true
     },
-    currentPoint: Point,
     destinationPoint: {
       type: Point,
       required: true
     },
     startingTime: {
       type: Date,
-      default: Date.now
+      default: Date.now,
+      required: true
     },
     rideStatus: {
       type: String,
@@ -24,7 +23,7 @@ const RideOffer = mongoose.model(
       default: 'YET_TO_START',
       required: true
     },
-    availableSeats: {
+    seatsRequired: {
       type: Number,
       required: true
     },
@@ -32,8 +31,12 @@ const RideOffer = mongoose.model(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true
+    },
+    rideOfferId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'RideOffer'
     }
   }, { timestamps: true })
 );
 
-module.exports = RideOffer;
+module.exports = RideRequest;
