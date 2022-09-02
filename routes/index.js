@@ -6,7 +6,7 @@ router.get("/ping", function (req, res) {
 });
 
 router.use('/user', require('./UserRoute'));
-//router.use('/vehicle', require('./VehicleRoute'));
+router.use('/vehicle', require('./VehicleRoute'));
 router.use('/ride-offer', require('./RideofferRoute.js'));
 router.use('/ride-request', require('./RiderequestRoute.js'));
 
