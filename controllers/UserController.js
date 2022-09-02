@@ -20,8 +20,7 @@ const createUser = async (req, res) => {
     fullName: req.body.fullName,
     emailId: req.body.emailId,
     mobileNo: req.mobileNo,
-    profileUrl: "",
-    role: UserRoleTypes.PASSENGER,
+    role: req.body.role,
   });
 
   user
