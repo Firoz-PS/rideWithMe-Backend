@@ -1,9 +1,9 @@
 const User = require("../models/UserModel");
-const UserRoleTypes = require("../constants/UserRoleTypes");
+const {createVehicle} = require("./VehicleController");
 
 // utility function to return the user object
 const returnUser = (user) => {
-  return {
+  const returnUser = {
     userId: user._id,
     fullName: user.fullName,
     emailId: user.emailId,
@@ -11,26 +11,43 @@ const returnUser = (user) => {
     profileUrl: user.profileUrl,
     role: user.role,
   };
+
+  if (user.role === "RIDER") {
+    returnUser.vehicleId = user.vehicleId;
+  }
+
+  return returnUser;
 };
 
 // function to create a new user
 const createUser = async (req, res) => {
+
   const user = new User({
     _id: req.userId,
     fullName: req.body.fullName,
     emailId: req.body.emailId,
     mobileNo: req.mobileNo,
+    profileUrl: req.body.profileUrl,
     role: req.body.role,
   });
 
+  try {
+    if (user.role === "RIDER") {
+      user.vehicleId = await createVehicle();
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ message: "failed to create vehicle for the user" });
+  }
+
   user
     .save()
-    .then(
+    .then((newUser) => {
       res.status(200).send({
         message: "user registered successfully",
-        user: returnUser(user),
-      })
-    )
+        user: returnUser(newUser),
+      });
+    })
     .catch((err) => {
       res.status(500).send({ message: "failed to create user" });
       console.log(err);
@@ -54,19 +71,11 @@ const fetchUserProfile = (req, res) => {
 
 // function to update the profile details of a user
 const updateUserProfile = (req, res) => {
-  User.findByIdAndUpdate(
-    req.userId,
-    {
-      fullName: req.body.fullName,
-      emailId: req.body.emailId,
-      profileUrl: req.body.profileUrl,
-    },
-    { new: true }
-  )
-    .then((user) => {
+  User.findByIdAndUpdate(req.userId, { $set: req.body }, { upsert: true, useFindAndModify: false, new: true })
+    .then((updatedUser) => {
       res.status(200).send({
         message: "user updated successfully",
-        user: returnUser(user),
+        user: returnUser(updatedUser),
       });
     })
     .catch((err) => {
@@ -81,11 +90,6 @@ const updateUserProfile = (req, res) => {
 
 // function to update the role of a user
 const updateUserRole = (req, res) => {
-  if (req.body.role !== UserRoleTypes.RIDER && req.body.role !== UserRoleTypes.PASSENGER) {
-    res.status(400).send({ message: "Invalid role" });
-    return;
-  }
-
   User.findByIdAndUpdate(
     req.userId,
     {
@@ -93,11 +97,11 @@ const updateUserRole = (req, res) => {
     },
     { new: true }
   )
-    .then((user) => {
+    .then(
       res.status(200).send({
         message: "user role uptated successfully",
-      });
-    })
+      })
+    )
     .catch((err) => {
       res.status(404).send({ message: "User Not found." });
       console.log(err);
