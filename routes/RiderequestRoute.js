@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const validator = require("../middlewares/validator");
 const RideRequestController = require("../controllers/RideRequestController");
 const firebaseAuth = require("../middlewares/firebaseAuth");
 
@@ -9,8 +8,8 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.get("/", RideRequestController.getRideRequests)
-router.post("/", RideRequestController.createRideRequest);
-router.put("/:rideRequestId", RideRequestController.putRideRequest);
+router.get("/", [firebaseAuth.verifyToken], RideRequestController.getRideRequests);
+router.post("/", [firebaseAuth.verifyToken], RideRequestController.createRideRequest);
+router.put("/:rideRequestId", [firebaseAuth.verifyToken], RideRequestController.putRideRequest);
 
 module.exports = router;

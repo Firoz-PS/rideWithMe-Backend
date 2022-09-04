@@ -13,27 +13,16 @@ const returnVehicle = (vehicle) => {
 };
 
 // function to create  new vehicle
-const createVehicle = async (req, res) => {
-    const vehicle = new Vehicle({
-        vehicleType: req.body.vehicleType,
-        vehicleName: req.body.vehicleName,
-        vehicleDetails: req.body.vehicleDetails,
-        vehicleNumber: req.body.vehicleNumber,
-        maxCapacity: req.body.maxCapacity
-    })
-
-    vehicle
-    .save()
-    .then(
-      res.status(200).send({
-        message: "Vehicle created successfully",
-        vehice: returnVehicle(vehicle),
-      })
-    )
-    .catch((err) => {
-      res.status(500).send({ message: "failed to create vehicle" });
-      console.log(err);
-    });
+const createVehicle = async () => {
+  const vehicle = new Vehicle({});
+  await vehicle.save()
+      
+  if (vehicle.id) {
+    return vehicle.id;
+  } else {
+    console.log("some error happened");
+    return;
+  }
 };
 
 // function to fetch the details of a vehicle using the id
@@ -53,31 +42,21 @@ const fetchVehicleDetails = (req, res) => {
 
 // function to update the details of a vehicle
 const updateVehicleDetails = (req, res) => {
-    Vehicle.findByIdAndUpdate(
-        req.params.id,
-        {
-            vehicleType: req.body.vehicleType,
-            vehicleName: req.body.vehicleName,
-            vehicleDetails: req.body.vehicleDetails,
-            vehicleNumber: req.body.vehicleNumber,
-            maxCapacity: req.body.maxCapacity
-        },
-        { new: true }
-    )
-        .then((vehicle) => {
+    Vehicle.findByIdAndUpdate(req.params.id, { $set: req.body }, { upsert: true, useFindAndModify: false, new: true })
+      .then((updatedVehicle) => {
         res.status(200).send({
-            message: "vehicle updated successfully",
-            vehicle: returnVehicle(vehicle),
+          message: "vehicle updated successfully",
+          vehicle: returnVehicle(updatedVehicle),
         });
-        })
-        .catch((err) => {
+      })
+      .catch((err) => {
         res.status(404).send({ message: "Vehicle Not found." });
         console.log(err);
-        })
-        .catch((err) => {
+      })
+      .catch((err) => {
         res.status(500).send({ message: "failed to update vehicle" });
         console.log(err);
-        });
+      });
 };
 
 module.exports = {

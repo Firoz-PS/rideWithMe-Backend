@@ -8,7 +8,6 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.post("/", [firebaseAuth.verifyToken], VehicleController.createVehicle);
 router.put("/:id", [firebaseAuth.verifyToken], VehicleController.updateVehicleDetails);
 router.get("/:id", [firebaseAuth.verifyToken], VehicleController.fetchVehicleDetails);
 

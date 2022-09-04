@@ -13,7 +13,7 @@ const createRideOffer = async (req, res) => {
     var verification = await verifyRideOffer(req.body);
     if (!(verification['status'] === 200)) return res.status(verification['status']).end({ message: verification['message'] });
 
-    const rideOfferHandle = new RideOffer(req.body);
+    const rideOfferHandle = new RideOffer({ ...req.body, userId: req.userId  });
     rideOfferHandle
         .save()
         .then((data) => {
