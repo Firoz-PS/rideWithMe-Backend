@@ -10,11 +10,8 @@ const returnUser = (user) => {
     mobileNo: user.mobileNo,
     profileUrl: user.profileUrl,
     role: user.role,
+    vehicleId: user.vehicleId,
   };
-
-  if (user.role === "RIDER") {
-    returnUser.vehicleId = user.vehicleId;
-  }
 
   return returnUser;
 };
@@ -32,9 +29,7 @@ const createUser = async (req, res) => {
   });
 
   try {
-    if (user.role === "RIDER") {
       user.vehicleId = await createVehicle();
-    }
   } catch (err) {
     console.log(err);
     return res.status(500).send({ message: "failed to create vehicle for the user" });
