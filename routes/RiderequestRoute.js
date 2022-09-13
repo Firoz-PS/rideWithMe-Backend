@@ -8,9 +8,9 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.get("/", RideRequestController.getRideRequests);
-router.get("/:rideRequestId", RideRequestController.getRideRequest);
-router.get("/user/:userId", RideRequestController.getRideRequestsByUserId);
+router.get("/", [firebaseAuth.verifyToken], RideRequestController.getRideRequests);
+router.get("/:rideRequestId", [firebaseAuth.verifyToken], RideRequestController.getRideRequest);
+router.get("/user/:userId", [firebaseAuth.verifyToken], RideRequestController.getRideRequestsByUserId);
 router.post("/", [firebaseAuth.verifyToken], RideRequestController.createRideRequest);
 router.put("/:rideRequestId", [firebaseAuth.verifyToken], RideRequestController.putRideRequest);
 
