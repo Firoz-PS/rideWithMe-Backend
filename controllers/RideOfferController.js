@@ -58,8 +58,34 @@ const getRideOffers = async (req, res) => {
         })
 };
 
+const getRideOffer = async (req, res) => {
+    var rideOfferId = req.params["rideOfferId"]
+    RideOffer.find({availableSeats: {$gte:1}, _id: rideOfferId}, null, null,
+        (err, updatedData) => {
+            if (err || updatedData.length == 0) return res.status(500).send({ message: `Failed to fetch Ride offer with id ${rideOfferId}` });
+            res.status(200).send({
+                message: `Ride offer with id ${rideOfferId} is available`,
+                rideOffer: updatedData,
+            })
+        })
+};
+
+const getRideOffersByUserId = async (req, res)=>{
+    var reqUserId = req.params["userId"]
+    RideOffer.find({availableSeats: {$gte:1}, userId: reqUserId}, null, null,
+        (err, updatedData) => {
+            if (err || updatedData.length == 0) return res.status(500).send({ message: `Failed to fetch Ride offers of userId ${reqUserId}` });
+            res.status(200).send({
+                message: `Available ride offers of userId ${reqUserId}`,
+                rideOffer: updatedData,
+            })
+        })
+}
+
 module.exports = {
     getRideOffers,
+    getRideOffer,
+    getRideOffersByUserId,
     createRideOffer,
     putRideOffer
 };

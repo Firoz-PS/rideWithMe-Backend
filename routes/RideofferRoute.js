@@ -9,6 +9,8 @@ router.use(function (req, res, next) {
 });
 
 router.get("/", [firebaseAuth.verifyToken], RideOfferController.getRideOffers);
+router.get("/:rideOfferId", [firebaseAuth.verifyToken], RideOfferController.getRideOffer);
+router.get("/user/:userId", [firebaseAuth.verifyToken], RideOfferController.getRideOffersByUserId);
 router.post("/", [firebaseAuth.verifyToken], RideOfferController.createRideOffer);
 router.put("/:rideOfferId", [firebaseAuth.verifyToken], RideOfferController.putRideOffer);
 
