@@ -28,8 +28,7 @@ const RideRequest = mongoose.model(
       required: true
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: true
     },
     rideOfferId :{
